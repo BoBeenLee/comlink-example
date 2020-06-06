@@ -1,8 +1,11 @@
 import { inject, observer } from 'mobx-react'
 import Link from 'next/link'
 import React from 'react'
+import * as Comlink from 'comlink';
+
 import { IStore } from '../store'
 import Clock from './Clock'
+import CounterWorker from 'src/workers/counter.worker';
 
 interface IOwnProps {
   store?: IStore
@@ -13,6 +16,17 @@ interface IOwnProps {
 @inject('store')
 @observer
 class SampleComponent extends React.Component<IOwnProps> {
+
+
+
+  public intervalId: any;
+
+  constructor(props:IOwnProps) {
+    super(props);
+
+    this.intervalId = setInterval(this.counting, 1000);
+  }
+
   public componentDidMount() {
     if (!this.props.store) {
       return
@@ -21,6 +35,7 @@ class SampleComponent extends React.Component<IOwnProps> {
   }
 
   public componentWillUnmount() {
+    this.intervalId && clearInterval(this.intervalId);
     if (!this.props.store) {
       return
     }
@@ -46,6 +61,15 @@ class SampleComponent extends React.Component<IOwnProps> {
       </div>
     )
   }
+
+  private counting = async () => {
+    const worker = new CounterWorker();
+    // WebWorkers use `postMessage` and therefore work with Comlink.
+    const obj = Comlink.wrap<any>(worker);
+    console.log(`Counter: ${await obj.counter}`);
+    await obj.inc();
+    console.log(`Counter: ${await obj.counter}`);
+  };
 }
 
 export default SampleComponent

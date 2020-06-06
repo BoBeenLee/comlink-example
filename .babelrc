@@ -1,4 +1,15 @@
 {
   "presets": ["next/babel"],
-  "plugins": [["@babel/plugin-proposal-decorators", { "legacy": true }]]
+  "plugins": [
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "src": "./src"
+        },
+        "cwd": "babelrc"
+      }
+    ]
+  ]
 }
