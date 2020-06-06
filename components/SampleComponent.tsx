@@ -1,50 +1,48 @@
-import { inject, observer } from 'mobx-react'
-import Link from 'next/link'
-import React from 'react'
-import * as Comlink from 'comlink';
+import { inject, observer } from "mobx-react";
+import Link from "next/link";
+import React from "react";
+import * as Comlink from "comlink";
 
-import { IStore } from '../store'
-import Clock from './Clock'
-import CounterWorker from 'src/workers/counter.worker';
+import { IStore } from "../store";
+import Clock from "./Clock";
+import CounterWorker from "src/workers/counter.worker";
+import { isBrowser } from "../utils/browser";
 
 interface IOwnProps {
-  store?: IStore
-  title: string
-  linkTo: string
+  store?: IStore;
+  title: string;
+  linkTo: string;
 }
 
-@inject('store')
+@inject("store")
 @observer
 class SampleComponent extends React.Component<IOwnProps> {
-
-
-
   public intervalId: any;
 
-  constructor(props:IOwnProps) {
+  constructor(props: IOwnProps) {
     super(props);
 
-    this.intervalId = setInterval(this.counting, 1000);
+    this.intervalId = isBrowser && setInterval(this.counting, 1000);
   }
 
   public componentDidMount() {
     if (!this.props.store) {
-      return
+      return;
     }
-    this.props.store.start()
+    this.props.store.start();
   }
 
   public componentWillUnmount() {
     this.intervalId && clearInterval(this.intervalId);
     if (!this.props.store) {
-      return
+      return;
     }
-    this.props.store.stop()
+    this.props.store.stop();
   }
 
   public render() {
     if (!this.props.store) {
-      return <div>Store not defined</div>
+      return <div>Store not defined</div>;
     }
     return (
       <div>
@@ -59,7 +57,7 @@ class SampleComponent extends React.Component<IOwnProps> {
           </Link>
         </nav>
       </div>
-    )
+    );
   }
 
   private counting = async () => {
@@ -72,4 +70,4 @@ class SampleComponent extends React.Component<IOwnProps> {
   };
 }
 
-export default SampleComponent
+export default SampleComponent;

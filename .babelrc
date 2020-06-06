@@ -6,7 +6,7 @@
       "module-resolver",
       {
         "alias": {
-          "src": "./src"
+          "src": "."
         },
         "cwd": "babelrc"
       }
