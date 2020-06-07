@@ -13,6 +13,11 @@ const obj = {
     console.log(ids, headers);
     return await starwars(ids, headers);
   },
+  // 콜백함수를 전달하여 브라우져에서 fetch호출하고 전달하여 값을 주는 방식임
+  async fetch1(callback = () => Promise.resolve()) {
+    const response =  await callback();
+    console.log("fetch1", response);
+  }
 };
 
 Comlink.expose(obj);
