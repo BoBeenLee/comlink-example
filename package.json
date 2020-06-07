@@ -15,7 +15,7 @@
     "next": "latest",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "typescript": "^3.0.1",
+    "typescript": "^3.9.5",
     "worker-loader": "^2.0.0"
   },
   "devDependencies": {

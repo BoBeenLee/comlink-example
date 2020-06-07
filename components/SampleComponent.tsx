@@ -6,6 +6,7 @@ import * as Comlink from "comlink";
 import { IStore } from "../store";
 import Clock from "./Clock";
 import CounterWorker from "src/workers/counter.worker";
+import FetchWorker from "src/workers/fetch.worker";
 import { isBrowser } from "../utils/browser";
 
 interface IOwnProps {
@@ -21,15 +22,15 @@ class SampleComponent extends React.Component<IOwnProps> {
 
   constructor(props: IOwnProps) {
     super(props);
-
-    this.intervalId = isBrowser && setInterval(this.counting, 1000);
+    // this.intervalId =  setInterval(this.counting, 1000);
   }
 
-  public componentDidMount() {
+  public async componentDidMount() {
     if (!this.props.store) {
       return;
     }
     this.props.store.start();
+    this.fetchSwarwars();
   }
 
   public componentWillUnmount() {
@@ -60,12 +61,24 @@ class SampleComponent extends React.Component<IOwnProps> {
     );
   }
 
+  private fetchSwarwars = async () => {
+    if (!isBrowser) {
+      return;
+    }
+    const worker = new FetchWorker();
+    const fetchWorker = Comlink.wrap<any>(worker);
+    await fetchWorker.fetchStarwars(["sdflksdnf"], { accessToken: "sdfds" });
+  };
+
   private counting = async () => {
+    if (!isBrowser) {
+      return;
+    }
     const worker = new CounterWorker();
     // WebWorkers use `postMessage` and therefore work with Comlink.
     const obj = Comlink.wrap<any>(worker);
     console.log(`Counter: ${await obj.counter}`);
-    await obj.inc();
+    await obj.inc(3);
     console.log(`Counter: ${await obj.counter}`);
   };
 }
