@@ -67,7 +67,8 @@ class SampleComponent extends React.Component<IOwnProps> {
     }
     const worker = new FetchWorker();
     const fetchWorker = Comlink.wrap<any>(worker);
-    await fetchWorker.fetchStarwars(["sdflksdnf"], { accessToken: "sdfds" });
+    await fetchWorker.fetch1(Comlink.proxy(this.props.store.fetchStarwars));
+    // await fetchWorker.fetchStarwars(["sdflksdnf"], { accessToken: "sdfds" });
   };
 
   private counting = async () => {
